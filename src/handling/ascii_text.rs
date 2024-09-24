@@ -47,39 +47,26 @@ pub fn print_process(message: &str) {
     println!("{}{}{}{}", left_padding.truecolor(19, 161, 14), "==========".truecolor(19, 161, 14), text.truecolor(19, 161, 14), "==========".truecolor(19, 161, 14));
 }
 
-pub fn print_warning(message: &str){
+pub fn print_log(level: &str, message: &str) {
     let current_time = Local::now().format("%H:%M").to_string();
-    println!(
-        "[{}] > {} {}",
-        current_time,
-        "WARNING! :".bright_yellow().bold(),
-        message.bright_yellow()
-    )
-}
+    let (label, colorized_message) = match level {
+        "info" => ("INFO", message.bright_cyan().to_string()),
+        "warning" => ("WARNING!", message.bright_yellow().to_string()),
+        "danger" => ("DANGER!", message.bright_red().to_string()),
+        "error" => ("ERROR!", message.bright_red().to_string()),
+        "success" => ("SUCCESS!", message.truecolor(19, 161, 14).to_string()),
+        "default" => ("", message.to_string()),
+        _ => ("", "".to_string()),
+    };
 
-pub fn print_danger(message: &str){
-    let current_time = Local::now().format("%H:%M").to_string();
-    println!(
-        "[{}] > {} {}",
-        current_time,
-        "DANGER! :".bright_red().bold(),
-        message.bright_red()
-    )
-}
-
-pub fn print_info(message: &str){
-    let current_time = Local::now().format("%H:%M").to_string();
-    println!(
-        "[{}] > {} {}",
-        current_time,
-        "INFO :".bright_cyan().bold(),
-        message.bright_cyan()
-    )
-}
-
-pub fn print_default(message: &str){
-    let current_time = Local::now().format("%H:%M").to_string();
-    println!(
-        "[{}] > {}",current_time, message
-    )
+    if label.is_empty() {
+        println!("[{}] > {}", current_time, colorized_message);
+    } else {
+        println!(
+            "[{}] > {} {}",
+            current_time,
+            label.bright_white().bold(),
+            colorized_message
+        );
+    }
 }
